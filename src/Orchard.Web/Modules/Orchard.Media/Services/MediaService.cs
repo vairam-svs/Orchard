@@ -64,7 +64,7 @@ namespace Orchard.Media.Services {
                     Size = folder.GetSize(),
                     LastUpdated = folder.GetLastUpdated(),
                     MediaPath = folder.GetPath()
-                }).Where(f => !f.Name.Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase));
+                }).Where(f => !f.Name.Equals("RecipeJournal", StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Orchard.Media.Services {
                     LastUpdated = file.GetLastUpdated(),
                     Type = file.GetFileType(),
                     FolderName = relativePath
-                });
+                }).ToList();
         }
 
         /// <summary>
@@ -140,7 +140,10 @@ namespace Orchard.Media.Services {
             Argument.ThrowIfNullOrEmpty(newFileName, "newFileName");
 
             if (!FileAllowed(newFileName, false)) {
-                throw new ArgumentException(T("New file name {0} is not allowed", newFileName).ToString());
+                if (string.IsNullOrEmpty(Path.GetExtension(newFileName))) {
+                    throw new ArgumentException(T("New file name \"{0}\" is not allowed. Please provide a file extension.", newFileName).ToString());
+                }
+                throw new ArgumentException(T("New file name \"{0}\" is not allowed.", newFileName).ToString());
             }
 
             _storageProvider.RenameFile(_storageProvider.Combine(folderPath, currentFileName), _storageProvider.Combine(folderPath, newFileName));

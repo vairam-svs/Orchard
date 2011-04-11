@@ -2,8 +2,8 @@
 AntiForgery: enabled
 Author: The Orchard Team
 Website: http://orchardproject.net
-Version: 1.0.20
-OrchardVersion: 1.0.20
+Version: 1.1.30
+OrchardVersion: 1.1.30
 Description: An implementation of widgets for Orchard.
 FeatureDescription: An implementation of widgets.
 Category: Widget
@@ -14,3 +14,4 @@ Features:
         Description: Adds a notification after creating a new Page with a direct link to create a Widget Layer for that specific page by URL.
         Dependencies: Orchard.Widgets
         Category: Widget
+        Priority: -1
