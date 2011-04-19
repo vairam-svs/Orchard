@@ -76,7 +76,8 @@ namespace Orchard.Specs.Hosting {
             Log("Copy binaries of the \"Orchard.Web\" project");
             _orchardWebPath.Combine("bin")
                 .ShallowCopy("*.dll", _tempSite.Combine("bin"))
-                .ShallowCopy("*.pdb", _tempSite.Combine("bin"));
+                .ShallowCopy("*.pdb", _tempSite.Combine("bin"))
+                .ShallowCopy("*.mdb", _tempSite.Combine("bin"));
 
             Log("Copy SqlCe native binaries");
             if (_orchardWebPath.Combine("bin").Combine("x86").IsDirectory) {
@@ -232,7 +233,8 @@ namespace Orchard.Specs.Hosting {
         private bool IsAssemblyFile(Path path) {
             return StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".exe") ||
                    StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".dll") ||
-                   StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".pdb");
+                   StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".pdb") ||
+                   StringComparer.OrdinalIgnoreCase.Equals(path.Extension, ".mdb");
         }
 
         private bool IsOrchardExtensionFile(Path path) {

@@ -59,6 +59,11 @@ namespace Orchard.FileSystems.Dependencies {
 
             Logger.Information("Storing assembly file \"{0}\" for module \"{1}\"", fileName, moduleName);
             _appDataFolder.StoreFile(fileName, path);
+            string mdbFrom = fileName + ".mdb";
+            // This API will throw (on Windows) if the file path falls outside App_Data.
+            // See PathValidation.ValidatePath.
+            if (_appDataFolder.FileExists(mdbFrom))
+                _appDataFolder.StoreFile(mdbFrom, path + ".mdb");
         }
 
         private string PrecompiledAssemblyPath(string moduleName) {
