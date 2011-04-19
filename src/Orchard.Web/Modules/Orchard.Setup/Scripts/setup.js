@@ -13,6 +13,15 @@
     }
 })();
 
+(function () {
+    $(document).ready(function () {
+        $('#databaseType').change (function () {
+            $('.databaseTypeHint').hide ();
+            $('#databaseType' + $(this).val()).show ();
+        });
+    });
+})();
+
 (function ($) {
        $("select.recipe").change(function () { // class="recipe" on the select element 
               var description = $(this).find(":selected").attr("recipedescription"); // reads the html attribute of the selected option

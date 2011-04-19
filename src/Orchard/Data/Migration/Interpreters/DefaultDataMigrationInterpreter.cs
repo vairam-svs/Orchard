@@ -79,10 +79,21 @@ namespace Orchard.Data.Migration.Interpreters {
                 if (appendComma) {
                     builder.Append(", ");
                 }
+                
+                // Primary keys are column references and as such they should be quoted as well
+                // This is important for databases like PostgreSQL which make a difference between
+                // quoted and unquoted identifiers. In Postgres unquoted identifiers are folded to
+                // lower case while quoted ones are not. Additionally, if you create a column named
+                // "MyColumn" it has to be referred to using "MyColumn" in queries and statements. The
+                // same rule applies to table/sequence/etc names.
+                
+                var primaryKeysQuoted = new List <string> ();
+                foreach (string pk in primaryKeys)
+                    primaryKeysQuoted.Add (_dialect.QuoteForColumnName (pk));
 
                 builder.Append(_dialect.PrimaryKeyString)
                     .Append(" ( ")
-                    .Append(String.Join(", ", primaryKeys.ToArray()))
+                    .Append(String.Join(", ", primaryKeysQuoted.ToArray()))
                     .Append(" )");
             }
 
@@ -354,7 +365,7 @@ namespace Orchard.Data.Migration.Interpreters {
             return false;
         }
 
-        private static string ConvertToSqlValue(object value) {
+        private string ConvertToSqlValue(object value) {
             if ( value == null ) {
                 return "null";
             }
@@ -368,7 +379,9 @@ namespace Orchard.Data.Migration.Interpreters {
                 case TypeCode.Char:
                     return String.Concat("'", Convert.ToString(value).Replace("'", "''"), "'");
                 case TypeCode.Boolean:
-                    return (bool) value ? "1" : "0";
+                    // Simple 0 or 1 is not valid here. Different dialects have different semantics
+                    // for boolean columns.
+                    return _dialect.ToBooleanValueString ((bool)value);
                 case TypeCode.SByte:
                 case TypeCode.Int16:
                 case TypeCode.UInt16:

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Orchard.Recipes.Models;
 using Orchard.Setup.Annotations;
+using Orchard.Setup.Controllers;
 
 namespace Orchard.Setup.ViewModels {
     public class SetupViewModel  {
@@ -21,6 +22,7 @@ namespace Orchard.Setup.ViewModels {
         public string DatabaseConnectionString { get; set; }
         public string DatabaseTablePrefix { get; set; }
         public bool DatabaseIsPreconfigured { get; set; }
+        public SetupDatabaseType DatabaseType { get; set; }
 
         public IEnumerable<Recipe> Recipes { get; set; }
         public string Recipe { get; set; }
